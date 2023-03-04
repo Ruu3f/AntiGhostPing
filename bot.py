@@ -11,4 +11,4 @@ async def on_ready():
 
 client.load_extension('verification')
 
-client.run(${{ secrets.DISCORD_TOKEN }})
+client.run("${{ secrets.DISCORD_TOKEN }}")
