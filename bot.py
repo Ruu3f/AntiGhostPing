@@ -11,4 +11,7 @@ async def on_ready():
 
 client.load_extension('verification')
 
-client.run(os.environ['DISCORD_TOKEN'])
+DISCORD_TOKEN = os.environ.get('DISCORD_TOKEN')
+print(f'DISCORD_TOKEN={DISCORD_TOKEN}')
+
+client.run(DISCORD_TOKEN)
