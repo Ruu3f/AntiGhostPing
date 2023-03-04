@@ -1,5 +1,9 @@
 import discord #importing py-cord
 from discord.ext import commands #importing commands
+from dotenv import load_dotenv #importing load_dotenv from dotenv
+import os #importing os
+
+load_dotenv() #load the .env file
 
 intents = discord.Intents.all() #setting intents, in this case i've set it to discord.Intents.all() so all intents are enabled
 client = commands.Bot(command_prefix='!', intents=intents) #setting the client value, this especially prefix and intents
@@ -10,4 +14,4 @@ async def on_ready(): #checking when the bot is started
 
 client.load_extension('verification') #loading the verification cog
 
-client.run("${{ secrets.DISCORD_TOKEN }}") #running the bot
+client.run(os.getenv('TOKEN')) #running the bot using the token stored in the .env file
