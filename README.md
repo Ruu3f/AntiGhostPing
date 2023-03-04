@@ -1,0 +1,2 @@
+# vercord
+Verification made simple.
