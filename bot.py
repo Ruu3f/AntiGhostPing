@@ -12,6 +12,9 @@ client = commands.Bot(command_prefix='!', intents=intents) #setting the client v
 async def on_ready(): #checking when the bot is started
     print(f"Logged in as {bot.user.name}#{bot.user.discriminator} | ID: {bot.user.id}") #telling what is the bot's user information
 
+    activity = discord.Activity(type=discord.ActivityType.watching, name=f"{len(bot.guilds)} guilds safe.") #defining the activity variable
+    await bot.change_presence(status=discord.Status.online, activity=activity) #setting the status aswell as activity
+
 client.load_extension('verification') #loading the verification cog
 
 client.run(os.getenv('TOKEN')) #running the bot using the token stored in the .env file
