@@ -10,7 +10,7 @@ client = commands.Bot(command_prefix='!', intents=intents) #setting the client v
 
 @client.event #making a new event decorator
 async def on_ready(): #checking when the bot is started
-    print('Logged in as {0.user}'.format(client)) #telling what is the bot's user information
+    print(f"Logged in as {bot.user.name}#{bot.user.discriminator} | ID: {bot.user.id}") #telling what is the bot's user information
 
 client.load_extension('verification') #loading the verification cog
 
