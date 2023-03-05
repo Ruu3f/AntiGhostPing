@@ -9,17 +9,24 @@ class Verification(commands.Cog):
 
     @commands.slash_command(name="set_vrole", description="Set the verification role.")
     @commands.has_permissions(administrator=True)
-    async def set_vrole(self, ctx: commands.Context, role: Option(discord.Role, "The verification role.",required=True)):
+    async def set_vrole(self, ctx: commands.Context, role: Option(discord.Role, "The verification role.", required=True)):
+        if role >= ctx.me.top_role:
+            await ctx.respond("I cannot assign roles higher than or equal to my own.")
+            return
+        elif role >= ctx.author.top_role:
+            await ctx.respond("You cannot assign roles higher than or equal to your own.")
+            return
+
         self.verification_role = role
         embed = discord.Embed(description=f"Verification role set to {role.mention}.", color=0x2f3136)
-        await ctx.send(embed=embed)
+        await ctx.respond(embed=embed)
 
     @commands.slash_command(name="send_vembed", description="Send the verification embed.")
     @commands.has_permissions(administrator=True)
     async def send_vembed(self, ctx: commands.Context):
         if self.verification_role is None:
             embed = discord.Embed(description="Verification role not set.", color=0x2f3136)
-            await ctx.send(embed=embed)
+            await ctx.respond(embed=embed)
             return
 
         embed = discord.Embed(title="Verification", description="Click the button below to verify!", color=discord.Color.green())
