@@ -58,7 +58,8 @@ class Verification(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def reset_all(self, ctx: commands.Context):
         self.verification_role = None
-        await ctx.respond("All verification settings have been reset.")
+        embed = discord.Embed(description="All verification settings have been reset.")
+        await ctx.respond(embed=embed)
 
 def setup(bot: commands.Bot) -> None:
     bot.add_cog(Verification(bot))
