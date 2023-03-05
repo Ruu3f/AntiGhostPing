@@ -10,13 +10,13 @@ class Verification(commands.Cog):
 
     async def set_reset_vrole(self, ctx: commands.Context, role=None, reset=False):
         if not ctx.author.guild_permissions.administrator:
-            return await ctx.send('You do not have permissions to perform this action')
+            return await ctx.respond('You do not have permissions to perform this action')
 
         if role and (role >= ctx.me.top_role or role >= ctx.author.top_role):
-            return await ctx.send('I cannot assign roles higher than or equal to my own.')
+            return await ctx.respond('I cannot assign roles higher than or equal to my own.')
 
         if not self.verification_role and reset is False:
-            return await ctx.send('Verification role not set.')
+            return await ctx.respond('Verification role not set.')
 
         if role:
             self.verification_role = role
@@ -35,7 +35,7 @@ class Verification(commands.Cog):
                         if role:
                             await role.delete()
                 os.remove(self.file_path)
-            await ctx.send(embed=discord.Embed(description="All verification settings have been reset."))
+            await ctx.respond("All verification settings have been reset.")
 
     @commands.slash_command(name="set_vrole", description="Set the verification role.")
     async def set_vrole(self, ctx: commands.Context, role: Option(discord.Role, "The verification role.", required=True)):
@@ -48,7 +48,7 @@ class Verification(commands.Cog):
     @commands.slash_command(name="send_vembed", description="Send the verification embed.")
     async def send_vembed(self, ctx: commands.Context):
         if self.verification_role is None:
-            return await ctx.send('Verification role not set.')
+            return await ctx.respond('Verification role not set.')
 
         embed = discord.Embed(title="Verification", description="Click the button below to verify!", color=discord.Color.green())
         button = discord.ui.Button(label="Verify", style=discord.ButtonStyle.green)
@@ -73,7 +73,7 @@ class Verification(commands.Cog):
 
         button.callback = button_callback
 
-        await ctx.send(embed=embed, view=view)
+        await ctx.respond(embed=embed, view=view)
 
 def setup(bot: commands.Bot):
     bot.add_cog(Verification(bot))
