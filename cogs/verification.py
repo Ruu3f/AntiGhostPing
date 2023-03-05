@@ -42,7 +42,8 @@ class Verification(commands.Cog):
                 await interaction.response.send_message(embed=embed, ephemeral=True)
                 return
 
-            await interaction.response.send_message("You have been verified!", ephemeral=True)
+            embed = discord.Embed(description="You have been verified.", color=0x2f3136)
+            await interaction.response.send_message(embed=embed, ephemeral=True)
             member = ctx.guild.get_member(interaction.user.id)
             await member.add_roles(self.verification_role)
 
@@ -51,7 +52,7 @@ class Verification(commands.Cog):
 
         button.callback = button_callback
 
-        await ctx.send(embed=embed, view=view)
+        await ctx.respond(embed=embed, view=view)
 
     @commands.slash_command(name="reset_vall", description="Reset all the verification settings.")
     @commands.has_permissions(administrator=True)
