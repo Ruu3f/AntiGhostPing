@@ -1,22 +1,22 @@
-import discord #importing py-cord
-from discord.ext import commands #importing commands
-from dotenv import load_dotenv #importing load_dotenv from dotenv
-import os #importing os
+import discord
+from discord.ext import commands
+from dotenv import load_dotenv
+import os
 
-load_dotenv() #load the .env file
+load_dotenv()
 
-TOKEN = os.getenv('TOKEN') #getting the token from the .env file
+TOKEN = os.getenv('TOKEN')
 
-intents = discord.Intents.all() #setting intents, in this case i've set it to discord.Intents.all() so all intents are enabled
-client = commands.Bot(command_prefix='!', intents=intents) #setting the client value, this especially prefix and intents
+intents = discord.Intents.all()
+client = commands.Bot(command_prefix='!', intents=intents)
 
-@client.event #making a new event decorator
-async def on_ready(): #checking when the bot is started
-    print(f"Logged in as {bot.user.name}#{bot.user.discriminator} | ID: {bot.user.id}") #telling what is the bot's user information
+@client.event
+async def on_ready():
+    print(f"Logged in as {client.user.name}#{client.user.discriminator} | ID: {client.user.id}")
 
-    activity = discord.Activity(type=discord.ActivityType.watching, name=f"{len(bot.guilds)} guilds safe.") #defining the activity variable
-    await client.change_presence(status=discord.Status.online, activity=activity) #setting the status aswell as activity
+    activity = discord.Activity(type=discord.ActivityType.watching, name=f"{len(client.guilds)} guilds safe.")
+    await client.change_presence(status=discord.Status.online, activity=activity)
 
-client.load_extension('verification') #loading the verification cog
+client.load_extension('verification')
 
-client.run(TOKEN) #running the bot
+client.run(TOKEN)
