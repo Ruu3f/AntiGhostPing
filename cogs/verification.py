@@ -6,51 +6,49 @@ from discord.commands import Option
 class Verification(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
-        self.verification_role: discord.Role = None
-        self.file_path = "vroles.txt"
+        self.verification_role = self.file_path = None
+
+    async def set_reset_vrole(self, ctx: commands.Context, role=None, reset=False):
+        if not ctx.author.guild_permissions.administrator:
+            return await ctx.send('You do not have permissions to perform this action')
+
+        if role and (role >= ctx.me.top_role or role >= ctx.author.top_role):
+            return await ctx.send('I cannot assign roles higher than or equal to my own.')
+
+        if not self.verification_role and reset is False:
+            return await ctx.send('Verification role not set.')
+
+        if role:
+            self.verification_role = role
+            with open(self.file_path, "w") as f:
+                f.write(f"{ctx.guild.id}:{role.id}")
+            await ctx.send(embed=discord.Embed(description=f"Verification role set to {role.mention}.", color=0x2f3136))
+        else:
+            self.verification_role = None
+            if os.path.exists(self.file_path):
+                with open(self.file_path, "r") as f:
+                    line = f.read()
+                    if line:
+                        guild_id, role_id = line.split(":")
+                        guild = self.bot.get_guild(int(guild_id))
+                        role = guild.get_role(int(role_id))
+                        if role:
+                            await role.delete()
+                os.remove(self.file_path)
+            await ctx.send(embed=discord.Embed(description="All verification settings have been reset."))
 
     @commands.slash_command(name="set_vrole", description="Set the verification role.")
-    @commands.has_permissions(administrator=True)
     async def set_vrole(self, ctx: commands.Context, role: Option(discord.Role, "The verification role.", required=True)):
-        if role >= ctx.me.top_role:
-            await ctx.respond("I cannot assign roles higher than or equal to my own.")
-            return
-        elif role >= ctx.author.top_role:
-            await ctx.respond("You cannot assign roles higher than or equal to your own.")
-            return
-
-        self.verification_role = role
-        with open(self.file_path, "w") as f:
-            f.write(f"{ctx.guild.id}:{role.id}")
-
-        embed = discord.Embed(description=f"Verification role set to {role.mention}.", color=0x2f3136)
-        await ctx.respond(embed=embed)
+        await self.set_reset_vrole(ctx, role=role)
 
     @commands.slash_command(name="reset_vall", description="Reset all the verification settings.")
-    @commands.has_permissions(administrator=True)
     async def reset_all(self, ctx: commands.Context):
-        self.verification_role = None
-        if os.path.exists(self.file_path):
-            with open(self.file_path, "r") as f:
-                line = f.read()
-                if line:
-                    guild_id, role_id = line.split(":")
-                    guild = self.bot.get_guild(int(guild_id))
-                    role = guild.get_role(int(role_id))
-                    if role:
-                        await role.delete()
-            os.remove(self.file_path)
-
-        embed = discord.Embed(description="All verification settings have been reset.")
-        await ctx.respond(embed=embed)
+        await self.set_reset_vrole(ctx, reset=True)
 
     @commands.slash_command(name="send_vembed", description="Send the verification embed.")
-    @commands.has_permissions(administrator=True)
     async def send_vembed(self, ctx: commands.Context):
         if self.verification_role is None:
-            embed = discord.Embed(description="Verification role not set.", color=0x2f3136)
-            await ctx.respond(embed=embed)
-            return
+            return await ctx.send('Verification role not set.')
 
         embed = discord.Embed(title="Verification", description="Click the button below to verify!", color=discord.Color.green())
         button = discord.ui.Button(label="Verify", style=discord.ButtonStyle.green)
@@ -75,7 +73,7 @@ class Verification(commands.Cog):
 
         button.callback = button_callback
 
-        await ctx.respond(embed=embed, view=view)
+        await ctx.send(embed=embed, view=view)
 
-def setup(bot: commands.Bot) -> None:
+def setup(bot: commands.Bot):
     bot.add_cog(Verification(bot))
