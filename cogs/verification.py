@@ -6,14 +6,14 @@ class Verification(commands.Cog):
         self.bot = bot
         self.verification_role: discord.Role = None
 
-    @commands.command()
+    @commands.slash_command(name="set_vrole", description="Set the verification role.")
     @commands.has_permissions(administrator=True)
-    async def setrole(self, ctx: commands.Context, role: discord.Role):
+    async def set_vrole(self, ctx: commands.Context, role: discord.Role):
         self.verification_role = role
         embed = discord.Embed(description=f"Verification role set to {role.mention}.", color=0x2f3136)
         await ctx.send(embed=embed)
 
-    @commands.command()
+    @commands.slash_command(name="send_vembed", description="Send the verification embed.")
     @commands.has_permissions(administrator=True)
     async def send_vembed(self, ctx: commands.Context):
         if self.verification_role is None:
@@ -31,7 +31,7 @@ class Verification(commands.Cog):
                 return
             if self.verification_role in ctx.author.roles:
                 embed = discord.Embed(description="You have already been verified.", color=0x2f3136)
-                await interaction.response.send_message(embed=embed)
+                await interaction.response.send_message(embed=embed, ephemeral=True)
                 return
 
             await interaction.response.send_message("You have been verified!", ephemeral=True)
@@ -43,14 +43,13 @@ class Verification(commands.Cog):
 
         button.callback = button_callback
 
-        await ctx.message.delete()
         await ctx.send(embed=embed, view=view)
 
-    @commands.command()
+    @commands.slash_command(name="reset_vall", description="Reset all the verification settings.")
     @commands.has_permissions(administrator=True)
     async def reset_all(self, ctx: commands.Context):
         self.verification_role = None
-        await ctx.send("All settings have been reset.")
+        await ctx.respond("All verification settings have been reset.")
 
 def setup(bot: commands.Bot) -> None:
     bot.add_cog(Verification(bot))
