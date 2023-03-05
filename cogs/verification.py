@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord.commands import Option
 
 class Verification(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -8,7 +9,7 @@ class Verification(commands.Cog):
 
     @commands.slash_command(name="set_vrole", description="Set the verification role.")
     @commands.has_permissions(administrator=True)
-    async def set_vrole(self, ctx: commands.Context, role: discord.Role):
+    async def set_vrole(self, ctx: commands.Context, role: Option(discord.Role, "The verification role.",required=True)):
         self.verification_role = role
         embed = discord.Embed(description=f"Verification role set to {role.mention}.", color=0x2f3136)
         await ctx.send(embed=embed)
