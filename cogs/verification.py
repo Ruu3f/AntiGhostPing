@@ -1,25 +1,24 @@
 import os
 import discord
 from discord.ext import commands
-from discord.commands import Option
-
 
 class Verification(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
-        self.verification_role = self.file_path = None
+        self.verification_role = None
+        self.file_path = "vroles.txt"
 
     async def set_reset_vrole(self, ctx: commands.Context, role=None, reset=False):
         if not ctx.author.guild_permissions.administrator:
-            await ctx.respond('You do not have permissions to perform this action')
+            await ctx.send('You do not have permissions to perform this action')
             return
 
         if not self.verification_role and not reset:
-            await ctx.respond('Verification role not set.')
+            await ctx.send('Verification role not set.')
             return
 
         if role and (role <= ctx.me.top_role or role <= ctx.author.top_role):
-            await ctx.respond('I cannot assign roles higher than or equal to my own.')
+            await ctx.send('I cannot assign roles higher than or equal to my own.')
             return
 
         if role:
@@ -39,20 +38,20 @@ class Verification(commands.Cog):
                         if role:
                             await role.delete()
                 os.remove(self.file_path)
-            await ctx.respond("All verification settings have been reset.")
+            await ctx.send("All verification settings have been reset.")
 
-    @commands.slash_command(name="set_vrole", description="Set the verification role.")
-    async def set_vrole(self, ctx: commands.Context, role: Option(discord.Role, "The verification role.", required=True)):
+    @commands.command(name="set_vrole", description="Set the verification role.")
+    async def set_vrole(self, ctx: commands.Context, role: discord.Role):
         await self.set_reset_vrole(ctx, role=role)
 
-    @commands.slash_command(name="reset_vall", description="Reset all the verification settings.")
+    @commands.command(name="reset_vall", description="Reset all the verification settings.")
     async def reset_all(self, ctx: commands.Context):
         await self.set_reset_vrole(ctx, reset=True)
 
-    @commands.slash_command(name="send_vembed", description="Send the verification embed.")
+    @commands.command(name="send_vembed", description="Send the verification embed.")
     async def send_vembed(self, ctx: commands.Context):
         if self.verification_role is None:
-            await ctx.respond('Verification role not set.')
+            await ctx.send('Verification role not set.')
             return
 
         embed = discord.Embed(title="Verification", description="Click the button below to verify!", color=discord.Color.green())
@@ -79,7 +78,7 @@ class Verification(commands.Cog):
 
         button.callback = button_callback
 
-        await ctx.respond(embed=embed, view=view)
+        await ctx.send(embed=embed, view=view)
 
 def setup(bot: commands.Bot):
     bot.add_cog(Verification(bot))
