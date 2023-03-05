@@ -15,7 +15,7 @@ async def on_ready(): #checking when the bot is started
     print(f"Logged in as {bot.user.name}#{bot.user.discriminator} | ID: {bot.user.id}") #telling what is the bot's user information
 
     activity = discord.Activity(type=discord.ActivityType.watching, name=f"{len(bot.guilds)} guilds safe.") #defining the activity variable
-    await bot.change_presence(status=discord.Status.online, activity=activity) #setting the status aswell as activity
+    await client.change_presence(status=discord.Status.online, activity=activity) #setting the status aswell as activity
 
 client.load_extension('verification') #loading the verification cog
 
