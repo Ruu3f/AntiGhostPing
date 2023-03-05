@@ -3,6 +3,7 @@ import discord
 from discord.ext import commands
 from discord.commands import Option
 
+
 class Verification(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -10,13 +11,16 @@ class Verification(commands.Cog):
 
     async def set_reset_vrole(self, ctx: commands.Context, role=None, reset=False):
         if not ctx.author.guild_permissions.administrator:
-            return await ctx.respond('You do not have permissions to perform this action')
+            await ctx.respond('You do not have permissions to perform this action')
+            return
 
-#        if role and (role <= ctx.me.top_role or role <= ctx.author.top_role):
-#            return await ctx.respond('I cannot assign roles higher than or equal to my own.')
+        if not self.verification_role and not reset:
+            await ctx.respond('Verification role not set.')
+            return
 
-        if not self.verification_role and reset is False:
-            return await ctx.respond('Verification role not set.')
+        if role and (role <= ctx.me.top_role or role <= ctx.author.top_role):
+            await ctx.respond('I cannot assign roles higher than or equal to my own.')
+            return
 
         if role:
             self.verification_role = role
@@ -48,7 +52,8 @@ class Verification(commands.Cog):
     @commands.slash_command(name="send_vembed", description="Send the verification embed.")
     async def send_vembed(self, ctx: commands.Context):
         if self.verification_role is None:
-            return await ctx.respond('Verification role not set.')
+            await ctx.respond('Verification role not set.')
+            return
 
         embed = discord.Embed(title="Verification", description="Click the button below to verify!", color=discord.Color.green())
         button = discord.ui.Button(label="Verify", style=discord.ButtonStyle.green)
@@ -58,6 +63,7 @@ class Verification(commands.Cog):
         async def button_callback(interaction: discord.Interaction):
             if interaction.user != ctx.author:
                 return
+
             if self.verification_role in ctx.author.roles:
                 embed = discord.Embed(description="You have already been verified.", color=0x2f3136)
                 await interaction.response.send_message(embed=embed, ephemeral=True)
