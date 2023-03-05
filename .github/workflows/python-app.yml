@@ -26,4 +26,6 @@ jobs:
         pip install -r requirements.txt
 
     - name: Run the bot
+      env:
+        DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
       run: python bot.py
