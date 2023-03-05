@@ -12,8 +12,8 @@ class Verification(commands.Cog):
         if not ctx.author.guild_permissions.administrator:
             return await ctx.respond('You do not have permissions to perform this action')
 
-        if role and (role <= ctx.me.top_role or role <= ctx.author.top_role):
-            return await ctx.respond('I cannot assign roles higher than or equal to my own.')
+#        if role and (role <= ctx.me.top_role or role <= ctx.author.top_role):
+#            return await ctx.respond('I cannot assign roles higher than or equal to my own.')
 
         if not self.verification_role and reset is False:
             return await ctx.respond('Verification role not set.')
