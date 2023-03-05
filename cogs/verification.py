@@ -1,3 +1,4 @@
+import os
 import discord
 from discord.ext import commands
 from discord.commands import Option
@@ -6,6 +7,7 @@ class Verification(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.verification_role: discord.Role = None
+        self.file_path = "vroles.txt"
 
     @commands.slash_command(name="set_vrole", description="Set the verification role.")
     @commands.has_permissions(administrator=True)
@@ -18,7 +20,28 @@ class Verification(commands.Cog):
             return
 
         self.verification_role = role
+        with open(self.file_path, "w") as f:
+            f.write(f"{ctx.guild.id}:{role.id}")
+
         embed = discord.Embed(description=f"Verification role set to {role.mention}.", color=0x2f3136)
+        await ctx.respond(embed=embed)
+
+    @commands.slash_command(name="reset_vall", description="Reset all the verification settings.")
+    @commands.has_permissions(administrator=True)
+    async def reset_all(self, ctx: commands.Context):
+        self.verification_role = None
+        if os.path.exists(self.file_path):
+            with open(self.file_path, "r") as f:
+                line = f.read()
+                if line:
+                    guild_id, role_id = line.split(":")
+                    guild = self.bot.get_guild(int(guild_id))
+                    role = guild.get_role(int(role_id))
+                    if role:
+                        await role.delete()
+            os.remove(self.file_path)
+
+        embed = discord.Embed(description="All verification settings have been reset.")
         await ctx.respond(embed=embed)
 
     @commands.slash_command(name="send_vembed", description="Send the verification embed.")
@@ -53,13 +76,6 @@ class Verification(commands.Cog):
         button.callback = button_callback
 
         await ctx.respond(embed=embed, view=view)
-
-    @commands.slash_command(name="reset_vall", description="Reset all the verification settings.")
-    @commands.has_permissions(administrator=True)
-    async def reset_all(self, ctx: commands.Context):
-        self.verification_role = None
-        embed = discord.Embed(description="All verification settings have been reset.")
-        await ctx.respond(embed=embed)
 
 def setup(bot: commands.Bot) -> None:
     bot.add_cog(Verification(bot))
