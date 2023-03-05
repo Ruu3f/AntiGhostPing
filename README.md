@@ -1,2 +1,2 @@
-# vercord
+# VerifCord
 Verification made simple.
