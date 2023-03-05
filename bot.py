@@ -30,7 +30,7 @@ async def on_ready():
 
 # loading the custom extensions (cogs)
 client.load_extension('cogs.verification')
-client.load_extension('error_handler')
+client.load_extension('errorhandler')
 
 # call the client.run() method to start the bot and connect it to Discord
 client.run(TOKEN)
