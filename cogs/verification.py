@@ -8,23 +8,27 @@ class Verification(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(administrator=True)
-    async def set_verification_role(self, ctx: commands.Context, role: discord.Role):
+    async def setrole(self, ctx: commands.Context, role: discord.Role):
         self.verification_role = role
-        await ctx.send(f"Verification role set to {role.name}.")
+        embed = discord.Embed(description=f"Verification role set to {role.mention}.", color=0x2f3136)
+        await ctx.send(embed=embed)
 
     @commands.command()
-    async def send_verification(self, ctx: commands.Context):
+    @commands.has_permissions(administrator=True)
+    async def send_vembed(self, ctx: commands.Context):
         if self.verification_role is None:
-            await ctx.send("Verification role not set.")
+            embed = discord.Embed(description="Verification role not set.", color=0x2f3136)
+            await ctx.send(embed=embed)
             return
 
         if self.verification_role in ctx.author.roles:
-            await ctx.send("You have already been verified.")
+            embed = discord.Embed(description="You have already been verified.")
+            await ctx.send(embed=embed)
             return
 
         embed = discord.Embed(title="Verification", description="Click the button below to verify!", color=discord.Color.green())
         button = discord.ui.Button(label="Verify", style=discord.ButtonStyle.green)
-        view = discord.ui.View()
+        view = discord.ui.View(timeout=None)
         view.add_item(button)
 
         async def button_callback(interaction: discord.Interaction):
@@ -35,15 +39,19 @@ class Verification(commands.Cog):
             member = ctx.guild.get_member(interaction.user.id)
             await member.add_roles(self.verification_role)
 
-            await interaction.message.delete()
-
             dm_channel = await interaction.user.create_dm()
-            await dm_channel.send("You have been verified!")
+            await dm_channel.send(f"You have been verified in `{ctx.guild.name}`.")
 
         button.callback = button_callback
 
         await ctx.message.delete()
-        await ctx.send(embed=embed, view=view, delete_after=10)
+        await ctx.send(embed=embed, view=view)
+
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def reset_all(self, ctx: commands.Context):
+        self.verification_role = None
+        await ctx.send("All settings have been reset.")
 
 def setup(bot: commands.Bot) -> None:
     bot.add_cog(Verification(bot))
