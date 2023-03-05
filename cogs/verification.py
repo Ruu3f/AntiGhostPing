@@ -30,8 +30,8 @@ class Verification(commands.Cog):
             if interaction.user != ctx.author:
                 return
             if self.verification_role in ctx.author.roles:
-                embed = discord.Embed(description="You have already been verified.")
-                await ctx.send(embed=embed)
+                embed = discord.Embed(description="You have already been verified.", color=0x2f3136)
+                await interaction.response.send_message(embed=embed)
                 return
 
             await interaction.response.send_message("You have been verified!", ephemeral=True)
