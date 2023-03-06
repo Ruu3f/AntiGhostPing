@@ -7,18 +7,6 @@ on:
   pull_request:
 
 jobs:
-  format:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install black
-      - name: Format code with Black
-        run: |
-          black .
-          
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -31,6 +19,18 @@ jobs:
         run: |
           flake8 --max-line-length=100
           
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install black
+      - name: Format code with Black
+        run: |
+          black .
+          
   run_bot:
     runs-on: ubuntu-latest
     env:
@@ -40,6 +40,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
       - name: Run bot
         run: |
           python index.py
