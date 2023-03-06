@@ -1,10 +1,13 @@
-import os 
-os.system("pip install pytz py-cord")
+import os
+from dotenv import load_dotenv
 import pytz
 import discord
 from discord.ext import commands
 from datetime import datetime, timedelta
 
+load_dotenv()
+
+TOKEN = os.getenv('DISCORD_TOKEN')
 intents = discord.Intents.all()
 client = discord.Client(command_prefix="!", intents=intents)
 utc = pytz.timezone('UTC')
@@ -45,4 +48,4 @@ async def on_message_delete(message):
                     await message.channel.send(embed=embed)
                     break
 
-client.run(os.getenv('TOKEN'))
+client.run(TOKEN)
