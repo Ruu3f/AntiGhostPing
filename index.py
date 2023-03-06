@@ -45,4 +45,4 @@ async def on_message_delete(message):
                     await message.channel.send(embed=embed)
                     break
 
-client.run(TOKEN)
+client.run(os.getenv('TOKEN'))
