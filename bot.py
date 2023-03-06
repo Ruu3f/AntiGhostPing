@@ -1,5 +1,6 @@
 # import required libraries and modules
 import os
+os.system("pip install py-cord python-dotenv")
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
