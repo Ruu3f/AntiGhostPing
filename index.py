@@ -1,9 +1,9 @@
 import os
 os.system("pip install py-cord pytz python-dotenv")
-from dotenv import load_dotenv
 import pytz
 import discord
 from discord.ext import commands
+from dotenv import load_dotenv
 from datetime import datetime, timedelta
 
 load_dotenv()
