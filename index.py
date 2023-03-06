@@ -1,7 +1,4 @@
 import os
-
-os.system("pip install py-cord pytz python-dotenv")
-
 import pytz
 import discord
 from discord.ext import commands
