@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 
 load_dotenv()
 
-TOKEN = os.getenv('DISCORD_TOKEN')
+TOKEN = os.getenv('TOKEN')
 intents = discord.Intents.all()
 client = discord.Client(command_prefix="!", intents=intents)
 utc = pytz.timezone('UTC')
