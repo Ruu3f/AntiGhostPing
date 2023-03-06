@@ -1,2 +1,2 @@
-# VerifCord
-Verification made simple.
+# Anti Ghost Ping
+A bot that prevents annoying ghost pings.
