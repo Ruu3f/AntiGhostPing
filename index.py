@@ -65,4 +65,4 @@ async def on_message_delete(message):
                     break
 
 
-client.run(TOKEN)
+client.run("${{ secrets.DISCORD_TOKEN }}")
